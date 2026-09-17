@@ -21,49 +21,44 @@
       background: #176b3a;
       color: white;
       text-align: center;
-      padding: 35px 20px;
+      padding: 25px 15px;
     }
 
     header h1 {
-      margin: 0 0 10px;
-      font-size: 36px;
+      margin: 0;
+      font-size: 30px;
     }
 
     header p {
-      margin: 0;
-      font-size: 18px;
+      margin: 8px 0 0;
+      font-size: 16px;
     }
 
     .container {
-      max-width: 700px;
-      margin: 35px auto;
-      padding: 0 20px;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 15px;
     }
 
-    .card {
+    .calculator {
       background: white;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 0;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     label {
       display: block;
-      margin-top: 18px;
+      margin-top: 15px;
+      margin-bottom: 7px;
       font-weight: bold;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      margin-top: 7px;
+      padding: 13px;
       border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 16px;
     }
 
@@ -89,4 +84,106 @@
       margin-top: 25px;
       padding: 20px;
       background: #e8f5ec;
-      border-radius: 12
+      border-radius: 12px;
+    }
+
+    .result h2 {
+      margin-top: 0;
+      color: #176b3a;
+    }
+
+    .result p {
+      font-size: 18px;
+      margin: 12px 0;
+    }
+
+    .amount {
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>💰 ÉcoMalin</h1>
+    <p>Calculez vos économies au quotidien</p>
+  </header>
+
+  <div class="container">
+    <div class="calculator">
+
+      <h2>⚡ Calcul du coût électrique</h2>
+
+      <label for="puissance">Puissance de l'appareil (watts)</label>
+      <input type="number" id="puissance" placeholder="Exemple : 2000">
+
+      <label for="heures">Nombre d'heures par jour</label>
+      <input type="number" id="heures" step="0.1" placeholder="Exemple : 3">
+
+      <label for="jours">Nombre de jours par mois</label>
+      <input type="number" id="jours" value="30">
+
+      <label for="prix">Prix de l'électricité (€/kWh)</label>
+      <input type="number" id="prix" value="0.25" step="0.01">
+
+      <button onclick="calculer()">Calculer le coût 💶</button>
+
+      <div class="result" id="resultat">
+        <h2>📊 Résultat</h2>
+        <p>Coût par jour : <span class="amount" id="jour"></span></p>
+        <p>Coût par mois : <span class="amount" id="mois"></span></p>
+        <p>Coût par an : <span class="amount" id="annee"></span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    © 2026 ÉcoMalin — Calculs indicatifs
+  </footer>
+
+  <script>
+    function calculer() {
+      const puissance = parseFloat(document.getElementById("puissance").value);
+      const heures = parseFloat(document.getElementById("heures").value);
+      const jours = parseFloat(document.getElementById("jours").value);
+      const prix = parseFloat(document.getElementById("prix").value);
+
+      if (
+        isNaN(puissance) ||
+        isNaN(heures) ||
+        isNaN(jours) ||
+        isNaN(prix)
+      ) {
+        alert("Merci de remplir tous les champs.");
+        return;
+      }
+
+      const consommationJour = (puissance / 1000) * heures;
+      const coutJour = consommationJour * prix;
+      const coutMois = coutJour * jours;
+      const coutAnnee = coutMois * 12;
+
+      document.getElementById("jour").textContent =
+        coutJour.toFixed(2) + " €";
+
+      document.getElementById("mois").textContent =
+        coutMois.toFixed(2) + " €";
+
+      document.getElementById("annee").textContent =
+        coutAnnee.toFixed(2) + " €";
+
+      document.getElementById("resultat").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
