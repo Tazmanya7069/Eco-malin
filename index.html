@@ -1,198 +1,214 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ÉcoMalin - Calculez vos économies</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7f5;
-      color: #1f2937;
-    }
-
-    header {
-      background: #176b3a;
-      color: white;
-      text-align: center;
-      padding: 25px 15px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
-    header p {
-      margin: 8px 0 0;
-      font-size: 16px;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 0 15px;
-    }
-
-    .calculator {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 7px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 25px;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      background: #176b3a;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #12552e;
-    }
-
-    .result {
-      display: none;
-      margin-top: 25px;
-      padding: 20px;
-      background: #e8f5ec;
-      border-radius: 12px;
-    }
-
-    .result h2 {
-      margin-top: 0;
-      color: #176b3a;
-    }
-
-    .result p {
-      font-size: 18px;
-      margin: 12px 0;
-    }
-
-    .amount {
-      font-weight: bold;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #666;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ÉcoMalin - Calculateurs du quotidien</title>
+<meta name="description" content="ÉcoMalin : calculateurs simples pour économiser au quotidien.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f5;color:#1f2937}
+header{background:#176b3a;color:white;text-align:center;padding:25px 15px}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0}
+.container{max-width:1000px;margin:25px auto;padding:0 15px}
+.intro,.calculator,.urssaf{background:white;padding:20px;border-radius:15px;box-shadow:0 4px 15px #0001;margin-bottom:20px}
+.intro h2,.calculator h2,.urssaf h2{color:#176b3a}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.cat{border:0;background:white;color:#176b3a;padding:12px 15px;border-radius:10px;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px #0001}
+.cat.active,.cat:hover{background:#176b3a;color:white}
+.category{display:none}.category.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+label{display:block;margin:14px 0 7px;font-weight:bold}
+input{width:100%;padding:13px;border:1px solid #ccc;border-radius:8px;font-size:16px}
+.action{width:100%;margin-top:20px;padding:14px;border:0;border-radius:10px;background:#176b3a;color:white;font-size:17px;font-weight:bold}
+.result{display:none;margin-top:20px;padding:16px;background:#e8f5ec;border-radius:12px}
+.amount{font-weight:bold;color:#176b3a}
+.note{font-size:13px;color:#666}
+footer{text-align:center;padding:30px;color:#666}
+</style>
 </head>
-
 <body>
 
-  <header>
-    <h1>💰 ÉcoMalin</h1>
-    <p>Calculez vos économies au quotidien</p>
-  </header>
+<header>
+<h1>💰 ÉcoMalin</h1>
+<p>Calculez vos économies au quotidien</p>
+</header>
 
-  <div class="container">
-    <div class="calculator">
+<div class="container">
 
-      <h2>⚡ Calcul du coût électrique</h2>
+<div class="intro">
+<h2>🧮 Tous vos calculateurs</h2>
+<p>Choisissez une rubrique pour trouver rapidement le calculateur dont vous avez besoin.</p>
+</div>
 
-      <label for="puissance">Puissance de l'appareil (watts)</label>
-      <input type="number" id="puissance" placeholder="Exemple : 2000">
+<div class="categories">
+<button class="cat active" onclick="show('energie',this)">⚡ Énergie</button>
+<button class="cat" onclick="show('travail',this)">💼 Travail & salaire</button>
+<button class="cat" onclick="show('auto',this)">🚗 Auto & transport</button>
+<button class="cat" onclick="show('budget',this)">💰 Budget</button>
+<button class="cat" onclick="show('finances',this)">🏦 Finances</button>
+</div>
 
-      <label for="heures">Nombre d'heures par jour</label>
-      <input type="number" id="heures" step="0.1" placeholder="Exemple : 3">
-
-      <label for="jours">Nombre de jours par mois</label>
-      <input type="number" id="jours" value="30">
-
-      <label for="prix">Prix de l'électricité (€/kWh)</label>
-      <input type="number" id="prix" value="0.25" step="0.01">
-
-      <button onclick="calculer()">Calculer le coût 💶</button>
-
-      <div class="result" id="resultat">
-        <h2>📊 Résultat</h2>
-        <p>Coût par jour : <span class="amount" id="jour"></span></p>
-        <p>Coût par mois : <span class="amount" id="mois"></span></p>
-        <p>Coût par an : <span class="amount" id="annee"></span></p>
-      </div>
-
-    </div>
-  </div>
-
-  <footer>
-    © 2026 ÉcoMalin — Calculs indicatifs
-  </footer>
-
-  <script>
-    function calculer() {
-      const puissance = parseFloat(document.getElementById("puissance").value);
-      const heures = parseFloat(document.getElementById("heures").value);
-      const jours = parseFloat(document.getElementById("jours").value);
-      const prix = parseFloat(document.getElementById("prix").value);
-
-      if (
-        isNaN(puissance) ||
-        isNaN(heures) ||
-        isNaN(jours) ||
-        isNaN(prix)
-      ) {
-        alert("Merci de remplir tous les champs.");
-        return;
-      }
-
-      const consommationJour = (puissance / 1000) * heures;
-      const coutJour = consommationJour * prix;
-      const coutMois = coutJour * jours;
-      const coutAnnee = coutMois * 12;
-
-      document.getElementById("jour").textContent =
-        coutJour.toFixed(2) + " €";
-
-      document.getElementById("mois").textContent =
-        coutMois.toFixed(2) + " €";
-
-      document.getElementById("annee").textContent =
-        coutAnnee.toFixed(2) + " €";
-
-      document.getElementById("resultat").style.display = "block";
-    }
-  </script>
-
-<section style="max-width:900px;margin:40px auto;padding:20px;background:white;border-radius:12px;">
-  <h2>💼 Calculateur de salaire</h2>
-  <p>Calculez votre salaire brut, net et les principales informations liées à votre rémunération.</p>
-
-  <script
-    data-module="simulateur-embauche"
-    data-couleur="#16a34a"
-    src="https://mon-entreprise.urssaf.fr/simulateur-iframe-integration.js"></script>
+<section id="energie" class="category active">
+<div class="grid">
+<div class="calculator">
+<h2>⚡ Coût électrique</h2>
+<label>Puissance de l'appareil (watts)</label>
+<input type="number" id="puissance" placeholder="Exemple : 2000">
+<label>Nombre d'heures par jour</label>
+<input type="number" id="heures" step="0.1" placeholder="Exemple : 3">
+<label>Nombre de jours par mois</label>
+<input type="number" id="jours" value="30">
+<label>Prix de l'électricité (€/kWh)</label>
+<input type="number" id="prix" value="0.25" step="0.01">
+<button class="action" onclick="electricite()">Calculer le coût 💶</button>
+<div class="result" id="resElec">
+<p>Coût par jour : <span class="amount" id="jour"></span></p>
+<p>Coût par mois : <span class="amount" id="mois"></span></p>
+<p>Coût par an : <span class="amount" id="annee"></span></p>
+</div>
+</div>
+</div>
 </section>
+
+<section id="travail" class="category">
+<div class="urssaf">
+<h2>💼 Salaire brut / net</h2>
+<p>Simulateur officiel de l'Urssaf pour estimer votre salaire.</p>
+<script data-module="simulateur-embauche" data-couleur="#16a34a" src="https://mon-entreprise.urssaf.fr/simulateur-iframe-integration.js"></script>
+</div>
+
+<div class="calculator">
+<h2>⏱️ Salaire horaire</h2>
+<label>Salaire mensuel (€)</label>
+<input type="number" id="salaire" placeholder="Exemple : 1800">
+<label>Heures travaillées par mois</label>
+<input type="number" id="heuresMois" value="151.67">
+<button class="action" onclick="horaire()">Calculer</button>
+<div class="result" id="resHoraire">
+<p>Taux horaire : <span class="amount" id="taux"></span></p>
+<p>Équivalent annuel : <span class="amount" id="annuel"></span></p>
+</div>
+</div>
+</section>
+
+<section id="auto" class="category">
+<div class="calculator">
+<h2>🚗 Coût d'un trajet</h2>
+<label>Distance (km)</label>
+<input type="number" id="distance" placeholder="Exemple : 120">
+<label>Consommation (L/100 km)</label>
+<input type="number" id="conso" placeholder="Exemple : 6.5" step="0.1">
+<label>Prix du carburant (€/L)</label>
+<input type="number" id="carburant" value="1.70" step="0.01">
+<button class="action" onclick="trajet()">Calculer le coût</button>
+<div class="result" id="resTrajet">
+<p>Carburant consommé : <span class="amount" id="litres"></span></p>
+<p>Coût aller : <span class="amount" id="cout"></span></p>
+<p>Aller-retour : <span class="amount" id="ar"></span></p>
+</div>
+</div>
+</section>
+
+<section id="budget" class="category">
+<div class="grid">
+
+<div class="calculator">
+<h2>🏷️ Calcul de remise</h2>
+<label>Prix avant remise (€)</label>
+<input type="number" id="avant" placeholder="Exemple : 100">
+<label>Remise (%)</label>
+<input type="number" id="remise" placeholder="Exemple : 20">
+<button class="action" onclick="remise()">Calculer</button>
+<div class="result" id="resRemise">
+<p>Économie : <span class="amount" id="eco"></span></p>
+<p>Prix final : <span class="amount" id="final"></span></p>
+</div>
+</div>
+
+<div class="calculator">
+<h2>💰 Objectif d'épargne</h2>
+<label>Somme à économiser (€)</label>
+<input type="number" id="objectif" placeholder="Exemple : 3000">
+<label>Épargne par mois (€)</label>
+<input type="number" id="epargne" placeholder="Exemple : 250">
+<button class="action" onclick="epargne()">Calculer la durée</button>
+<div class="result" id="resEpargne">
+<p>Durée estimée : <span class="amount" id="duree"></span></p>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="finances" class="category">
+<div class="calculator">
+<h2>🏦 Calculateur de crédit</h2>
+<label>Montant emprunté (€)</label>
+<input type="number" id="credit" placeholder="Exemple : 10000">
+<label>Taux annuel (%)</label>
+<input type="number" id="tauxCredit" placeholder="Exemple : 4" step="0.01">
+<label>Durée (années)</label>
+<input type="number" id="dureeCredit" placeholder="Exemple : 5">
+<button class="action" onclick="creditCalc()">Calculer la mensualité</button>
+<div class="result" id="resCredit">
+<p>Mensualité estimée : <span class="amount" id="mensualite"></span></p>
+<p>Total estimé : <span class="amount" id="total"></span></p>
+<p class="note">Simulation indicative, hors assurance et frais.</p>
+</div>
+</div>
+</section>
+
+</div>
+
+<footer>© 2026 ÉcoMalin — Calculs indicatifs</footer>
+
+<script>
+function show(id,b){
+document.querySelectorAll('.category').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');b.classList.add('active');
+}
+function n(id){return parseFloat(document.getElementById(id).value)}
+function €(x){return x.toFixed(2)+' €'}
+
+function electricite(){
+let p=n('puissance'),h=n('heures'),j=n('jours'),pr=n('prix');
+if([p,h,j,pr].some(isNaN)){alert('Merci de remplir tous les champs.');return}
+let d=p/1000*h*pr,m=d*j,a=m*12;
+jour.textContent=$(d);mois.textContent=$(m);annee.textContent=$(a);
+resElec.style.display='block'
+}
+function horaire(){
+let s=n('salaire'),h=n('heuresMois');
+if(isNaN(s)||isNaN(h)||h<=0){alert('Merci de remplir correctement les champs.');return}
+taux.textContent=$(s/h);annuel.textContent=$(s*12);resHoraire.style.display='block'
+}
+function trajet(){
+let d=n('distance'),c=n('conso'),p=n('carburant');
+if([d,c,p].some(isNaN)||c<=0){alert('Merci de remplir correctement les champs.');return}
+let l=d*c/100,x=l*p;
+litres.textContent=l.toFixed(2)+' L';cout.textContent=$(x);ar.textContent=$(x*2);resTrajet.style.display='block'
+}
+function remise(){
+let p=n('avant'),r=n('remise');
+if([p,r].some(isNaN)){alert('Merci de remplir correctement les champs.');return}
+let e=p*r/100;eco.textContent=$(e);final.textContent=$(p-e);resRemise.style.display='block'
+}
+function epargne(){
+let o=n('objectif'),e=n('epargne');
+if([o,e].some(isNaN)||e<=0){alert('Merci de remplir correctement les champs.');return}
+let m=Math.ceil(o/e),a=Math.floor(m/12),r=m%12;
+duree.textContent=a?(a+' an'+(a>1?'s':'')+(r?' et '+r+' mois':'')):m+' mois';
+resEpargne.style.display='block'
+}
+function creditCalc(){
+let c=n('credit'),t=n('tauxCredit'),a=n('dureeCredit');
+if([c,t,a].some(isNaN)||c<=0||a<=0||t<0){alert('Merci de remplir correctement les champs.');return}
+let m=a*12,r=t/100/12,x=r?c*r/(1-Math.pow(1+r,-m)):c/m;
+mensualite.textContent=$(x);total.textContent=$(x*m);resCredit.style.display='block'
+}
+</script>
 </body>
 </html>
